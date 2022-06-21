@@ -1,4 +1,4 @@
-
+// Question objects
 q1 = {question:"Which of the following best describes a Web API?"
     , a1: {
         answer:"Web APIs are not built into the browser by default, and you generally have to retrieve their code and information from somewhere on the Web."
@@ -281,11 +281,12 @@ q15 = {question:"Which of the following is NOT an example of why we use client-s
         , correct:false
     }
 }
-
+// testing code
+// use to manage which question is reported on testing page
 var indexCnt = 0;
-
+// array of question objects
 var questions = [q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,q12,q13,q14,q15];
-
+// tracks score
 var score = 0;
 // main link
 var mainEl = document.getElementById("root");
@@ -317,15 +318,15 @@ var initSubmit = document.getElementById("init-submit");
 var navbarEl = document.getElementById("navbar");
 // proceed
 var proceedToNextQuestion = false;
-
+// stores timeinterval object
 var time;
-
+// count down variable for timeinterval object
 var countdown = 50;
-
+// count the number of wrong guesses
 var wrongGuesses = 0;
 // high score link
 var highScores = document.getElementById("high-scores");
-
+// renders new question to testing page
 function renderQuestion(questionObj){
     wrongGuesses=0;
     countdown=50;
@@ -374,12 +375,13 @@ function grade(event, timeLeft=true){
             clearInterval(time);
             nextBtn.classList.remove("hidden");
             currentScore.textContent = (((score)/(indexCnt+1))*100).toFixed(2);
+        // some wrong
         } else {
             event.target.setAttribute("style", "background-color:red;")
             countdown -= 10;
             wrongGuesses++;
             result.textContent = "Wrong"
-        }
+        } //all wrong
     } else{
         for(i=0;i<answerOl.children.length;i++){
             var child = answerOl.children[i];
@@ -397,10 +399,9 @@ function grade(event, timeLeft=true){
     }
     mainEl.append(result);
 }
-
+// sets a countdown timer
 function setTimer(){
     var timeInterval = setInterval(function () {
-      //
       if(countdown>1){
         timeLeftEl.textContent = countdown + " seconds remaining";
         countdown--;
@@ -415,7 +416,7 @@ function setTimer(){
     },1000);
     return timeInterval;
 }
-
+ // removes the questions from testing page
 function clearQuestions () {
     var child = answerOl.lastElementChild;
     while (child) {
@@ -428,7 +429,7 @@ function clearQuestions () {
     })
     
 }
-
+// reports the final scores on the test
 function scoreTest () {
     clearQuestions();
     // hide all the things
@@ -441,10 +442,8 @@ function scoreTest () {
     renderScores();
     // report score
     finalScore.textContent= (((score)/(indexCnt))*100).toFixed(2);
-    // enter initials
-    // save
 }
-
+// allows for the test to be attempted again
 function testAgain () {
     indexCnt = 0;
     score = 0;
@@ -461,7 +460,7 @@ function testAgain () {
     }
     renderQuestion(questions[indexCnt]);
 }
-
+// moves to the next question
 function proceedToNext(){
     indexCnt++;
     if (indexCnt<questions.length){
@@ -471,7 +470,7 @@ function proceedToNext(){
         scoreTest();
     }
 }
-
+// saves scores in local storage
 function saveScores(event) {
     event.preventDefault();
     var initialsSaved = document.getElementById("initials").value;
@@ -491,7 +490,7 @@ function saveScores(event) {
     highScores.append(s1);
     initSubmit.removeEventListener('submit',saveScores);
 }
-
+// renders high scores on high score page
 function renderScores() {
     var scoreArray = []
     var scores = localStorage.getItem('currentScores');
@@ -513,7 +512,3 @@ nextBtn.addEventListener('click',proceedToNext);
 testBtn.addEventListener('click', testAgain);
 initSubmit.addEventListener('submit',saveScores);
 renderQuestion(questions[indexCnt]);
-
-// todo: decrement time with incorrect answer
-// render scores
-// create link in navbar to highscores
