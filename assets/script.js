@@ -364,7 +364,11 @@ function grade(event, timeLeft=true){
         // correct
         if(event.target.dataset.correct=="true"){
             event.target.setAttribute("style", "background-color:green;")
-            score++;
+            if(wrongGuesses==0){
+                score++;
+            } else {
+                score = score + (1-(wrongGuesses*.33));
+            }
             result.textContent = "Correct";
             answerOl.removeEventListener('click', grade)
             clearInterval(time);
@@ -481,6 +485,10 @@ function saveScores(event) {
     }
     localStorage.setItem('currentScores',currentScores);
     document.getElementById("initials").value ='';
+    var s1 = document.createElement("li");
+    s1.textContent = initialsSaved + ": "+(((score)/(indexCnt))*100).toFixed(2);
+    s1.classList.add("high-scores");
+    highScores.append(s1);
 }
 
 function renderScores() {
