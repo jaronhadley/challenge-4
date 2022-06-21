@@ -309,11 +309,11 @@ var currentScore = document.getElementById("current-score");
 var reportCard = document.getElementById("report-card");
 // final score link
 var finalScore = document.getElementById("final-score");
-// test again link
+// test btn link
 var testBtn = document.getElementById("test-btn");
-// test again link
+// init submit link
 var initSubmit = document.getElementById("init-submit");
-// test again link
+// navbar link
 var navbarEl = document.getElementById("navbar");
 // proceed
 var proceedToNextQuestion = false;
@@ -323,7 +323,8 @@ var time;
 var countdown = 50;
 
 var wrongGuesses = 0;
-
+// high score link
+var highScores = document.getElementById("high-scores");
 
 function renderQuestion(questionObj){
     wrongGuesses=0;
@@ -427,10 +428,13 @@ function clearQuestions () {
 function scoreTest () {
     clearQuestions();
     // hide all the things
+    timeLeftEl.textContent = ' ';
     mainEl.classList.add("hidden");
     nextBtn.classList.add("hidden");
     navbarEl.classList.add("hidden");
     reportCard.classList.remove("hidden");
+    // render scores
+    renderScores();
     // report score
     finalScore.textContent= (((score)/(indexCnt))*100).toFixed(2);
     // enter initials
@@ -445,6 +449,12 @@ function testAgain () {
     mainEl.classList.remove("hidden");
     nextBtn.classList.remove("hidden");
     navbarEl.classList.remove("hidden");
+    // delete scores
+    var scoreChild = highScores.lastElementChild;
+    while (scoreChild) {
+        highScores.removeChild(scoreChild);
+        scoreChild = highScores.lastElementChild;
+    }
     renderQuestion(questions[indexCnt]);
 }
 
@@ -463,16 +473,31 @@ function saveScores(event) {
     var initialsSaved = document.getElementById("initials").value;
     var currentScores = localStorage.getItem('currentScores');
     if(currentScores!=null){
-        currentScores += ",{id:"+initialsSaved+",score:"+(((score)/(indexCnt))*100).toFixed(2)+"}";
+        //currentScores = currentScores.slice(1,-1);
+        currentScores += ';{"id":"'+initialsSaved+'","score":'+(((score)/(indexCnt))*100).toFixed(2)+'}';
+        //currentScores = "["+currentScores+"]";
     } else {
-        currentScores = "{id:"+initialsSaved+",score:"+(((score)/(indexCnt))*100).toFixed(2)+"}";
+        currentScores = '{"id":"'+initialsSaved+'","score":'+(((score)/(indexCnt))*100).toFixed(2)+'}';
     }
     localStorage.setItem('currentScores',currentScores);
     document.getElementById("initials").value ='';
 }
 
 function renderScores() {
-
+    var scoreArray = []
+    var scores = localStorage.getItem('currentScores');
+    if(scores) {
+        scores = scores.split(';');
+        scores.forEach(score => {
+            scoreArray.push(JSON.parse(score));
+        })
+    }
+    scoreArray.forEach(scor => {
+        var s1 = document.createElement("li");
+        s1.textContent = scor.id + ": "+scor.score;
+        s1.classList.add("high-scores");
+        highScores.append(s1);
+    })
 }
 
 nextBtn.addEventListener('click',proceedToNext);
