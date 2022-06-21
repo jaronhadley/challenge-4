@@ -320,8 +320,14 @@ var proceedToNextQuestion = false;
 
 var time;
 
+var countdown = 50;
+
+var wrongGuesses = 0;
+
 
 function renderQuestion(questionObj){
+    wrongGuesses=0;
+    countdown=50;
     nextBtn.classList.add("hidden");
     reportCard.classList.add("hidden");
     questionHead.textContent = questionObj.question;
@@ -352,21 +358,21 @@ function renderQuestion(questionObj){
 function grade(event, timeLeft=true){
     var result = document.createElement("footer");
     result.classList.add("foot");
-    if (timeLeft){
+    if (timeLeft && wrongGuesses < 2){
         if (answerOl=== event.target) return;
         // correct
         if(event.target.dataset.correct=="true"){
             event.target.setAttribute("style", "background-color:green;")
             score++;
             result.textContent = "Correct";
+            answerOl.removeEventListener('click', grade)
+            clearInterval(time);
+            nextBtn.classList.remove("hidden");
+            currentScore.textContent = (((score)/(indexCnt+1))*100).toFixed(2);
         } else {
             event.target.setAttribute("style", "background-color:red;")
-            for(i=0;i<event.target.parentElement.children.length;i++){
-                var child = event.target.parentElement.children[i];
-                if(child.dataset.correct=="true"){
-                    child.setAttribute("style", "background-color:green;")
-                }
-            }
+            countdown -= 10;
+            wrongGuesses++;
             result.textContent = "Wrong"
         }
     } else{
@@ -378,32 +384,30 @@ function grade(event, timeLeft=true){
                 child.setAttribute("style", "background-color:red;")
             }
             result.textContent = "Wrong"
+            clearInterval(time);
+            answerOl.removeEventListener('click', grade)
+            nextBtn.classList.remove("hidden");
+            currentScore.textContent = (((score)/(indexCnt+1))*100).toFixed(2);
         }
     }
-    clearInterval(time);
-    answerOl.removeEventListener('click', grade)
     mainEl.append(result);
-    nextBtn.classList.remove("hidden");
-    currentScore.textContent = (((score)/(indexCnt+1))*100).toFixed(2);
 }
 
-function setTimer(timeLeft){
+function setTimer(){
     var timeInterval = setInterval(function () {
       //
-      if(timeLeft>1){
-        timeLeftEl.textContent = timeLeft + " seconds remaining";
-        timeLeft--;
-      }else if (timeLeft>0){
-        timeLeftEl.textContent = timeLeft + " second remaining";
-        timeLeft--;
+      if(countdown>1){
+        timeLeftEl.textContent = countdown + " seconds remaining";
+        countdown--;
+      }else if (countdown>0){
+        timeLeftEl.textContent = countdown + " second remaining";
+        countdown--;
       }else{
         timeLeftEl.textContent = " ";
         grade(document.createEvent('Event'),false)
         clearInterval();
       }
-      //
     },1000);
-
     return timeInterval;
 }
 
@@ -413,8 +417,11 @@ function clearQuestions () {
         answerOl.removeChild(child);
         child = answerOl.lastElementChild;
     }
-    var footEl = document.getElementsByClassName("foot");
-    footEl[0].remove();
+    var footEl = document.querySelectorAll(".foot");
+    footEl.forEach(foot => {
+        foot.remove();
+    })
+    
 }
 
 function scoreTest () {
