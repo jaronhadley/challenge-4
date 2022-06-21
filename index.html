@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="assets/style.css">
+    </head>
+    <body>
+        <nav id="navbar">
+            <!--Score-->
+            <div id="score">
+                Your Score: <span id="current-score"></span>
+            </div>
+            <!--Timer-->
+            <div id="timer">
+                Time Remaining: <span id="time-left"></span>
+            </div>
+        </nav>
+        <main id="root">
+            <h3 id="question"></h3>
+            <ol id="answers"></ol>
+        </main>
+        <div id="next">
+            <br>
+            <button id="next-btn">Next Question</button>
+        </div>
+        <div id="report-card">
+            <h3>Your Final Score is: <span id='final-score'></span></h3>
+            <h4>Would you like to save your score?</h4>
+            <form id="init-submit">
+                <label for="initials">Enter Your Initials (3 Characters Max)</label>
+                <input type="text" id="initials" name="initials" maxlength="3">
+                <input type="submit" value="submit">
+            </form>
+            <br>
+            <div id="test-again">
+                <button id="test-btn">Take the test again?</button>
+            </div>
+            <br>
+            <br>
+            <div id="high-scores">
+                
+            </div>
+        </div>
+        <script type="text/javascript" src="assets/script.js"></script>
+    </body>
+</html>

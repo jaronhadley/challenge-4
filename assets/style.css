@@ -1,0 +1,22 @@
+#root{
+    align-content:center;
+}
+.answer-button {
+    border-color: black;
+    border-style:solid;
+    border-radius:10px;
+    border-width:1px;
+    padding:15px;
+    margin:15px;
+    width:fit-content;
+}
+.answer-button:hover {
+    background-color:lightblue;
+}
+#navbar {
+    display:flex;
+    justify-content:space-between;
+}
+.hidden {
+    display:none;
+}
