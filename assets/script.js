@@ -359,7 +359,7 @@ function renderQuestion(questionObj){
 function grade(event, timeLeft=true){
     var result = document.createElement("footer");
     result.classList.add("foot");
-    if (timeLeft && wrongGuesses < 2){
+    if (timeLeft && wrongGuesses < 3){
         if (answerOl=== event.target) return;
         // correct
         if(event.target.dataset.correct=="true"){
@@ -489,6 +489,7 @@ function saveScores(event) {
     s1.textContent = initialsSaved + ": "+(((score)/(indexCnt))*100).toFixed(2);
     s1.classList.add("high-scores");
     highScores.append(s1);
+    initSubmit.removeEventListener('submit',saveScores);
 }
 
 function renderScores() {
